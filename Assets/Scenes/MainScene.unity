@@ -8959,7 +8959,7 @@ MonoBehaviour:
   CustomersTargetNumber: 15
   CustomerWaitTime: 15
   CustomerSpawnTime: 3
-  CustomerPlaces:
+  _customerPlaces:
   - {fileID: 1683130145}
   - {fileID: 1769957720}
   - {fileID: 451245868}
