@@ -16,6 +16,23 @@
       },
       "hash": "c99ea79c18edcf5eccfe16fc0736426c8d2e0f5f"
     },
+    "com.kyrylokuzyk.primetween": {
+      "version": "file:../Assets/Plugins/PrimeTween/internal/com.kyrylokuzyk.primetween.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {}
+    },
+    "com.nk7.ui": {
+      "version": "https://github.com/lsd7nk/nk7-ui.git?path=src/UI/#main",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.cysharp.unitask": "2.3.0",
+        "com.kyrylokuzyk.primetween": "1.3.5",
+        "com.unity.visualscripting": "1.9.7"
+      },
+      "hash": "087d61a2a37d6f89060254bbfb36551d396408e0"
+    },
     "com.marijnzwemmer.unity-toolbar-extender": {
       "version": "https://github.com/marijnz/unity-toolbar-extender.git",
       "depth": 0,
@@ -76,6 +93,16 @@
       "depth": 1,
       "source": "builtin",
       "dependencies": {}
+    },
+    "com.unity.visualscripting": {
+      "version": "1.9.8",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
     },
     "com.unity.ide.rider": {
       "version": "3.0.36",
