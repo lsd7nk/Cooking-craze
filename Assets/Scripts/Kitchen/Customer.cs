@@ -29,6 +29,28 @@ namespace CookingPrototype.Kitchen {
 		/// </summary>
 		public bool IsComplete { get { return _orders.Count == 0; } }
 
+		public bool HasOrder(Order order)
+		{
+			for (int i = 0; i < _orders.Count; ++i)
+			{
+				var orderFromList = _orders[i];
+
+				if (orderFromList != order)
+				{
+					continue;
+				}
+
+				return true;
+			}
+
+			return false;
+		}
+		
+		public bool HasAnyOrder()
+		{
+			return _orders.Count > 0;
+        }
+
 		void Update() {
 			if ( !_isActive ) {
 				return;

@@ -16,7 +16,7 @@ namespace CookingPrototype.Controllers {
 		public int                 CustomersTargetNumber = 15;
 		public float               CustomerWaitTime      = 18f;
 		public float               CustomerSpawnTime     = 3f;
-		public List<CustomerPlace> CustomerPlaces        = null;
+		[SerializeField] private CustomerPlace[] _customerPlaces;
 
 		[HideInInspector]
 		public int TotalCustomersGenerated { get; private set; } = 0;
@@ -29,12 +29,12 @@ namespace CookingPrototype.Controllers {
 		Stack<List<Order>> _orderSets;
 
 		bool HasFreePlaces {
-			get { return CustomerPlaces.Any(x => x.IsFree); }
+			get { return _customerPlaces.Any(x => x.IsFree); }
 		}
 
 		public bool IsComplete {
 			get {
-				return TotalCustomersGenerated >= CustomersTargetNumber && CustomerPlaces.All(x => x.IsFree);
+				return TotalCustomersGenerated >= CustomersTargetNumber && _customerPlaces.All(x => x.IsFree);
 			}
 		}
 
@@ -71,13 +71,30 @@ namespace CookingPrototype.Controllers {
 		}
 
 		void SpawnCustomer() {
-			var freePlaces = CustomerPlaces.FindAll(x => x.IsFree);
-			if ( freePlaces.Count <= 0 ) {
+			CustomerPlace chosenPlace = null;
+			int freePlacesCount = 0;
+
+			for (int i = 0; i < _customerPlaces.Length; ++i)
+			{
+				var place = _customerPlaces[i];
+
+				if (!place.IsFree)
+				{
+					continue;
+				}
+
+				if (Random.Range(0, ++freePlacesCount) == 0)
+				{
+					chosenPlace = place;
+				}
+			}
+
+			if (chosenPlace == null)
+			{
 				return;
 			}
 
-			var place = freePlaces[Random.Range(0, freePlaces.Count)];
-			place.PlaceCustomer(GenerateCustomer());
+			chosenPlace.PlaceCustomer(GenerateCustomer());
 			TotalCustomersGenerated++;
 			TotalCustomersGeneratedChanged?.Invoke();
 		}
@@ -100,16 +117,23 @@ namespace CookingPrototype.Controllers {
 		public void Init() {
 			var totalOrders = 0;
 			_orderSets = new Stack<List<Order>>();
-			for ( var i = 0; i < CustomersTargetNumber; i++ ) {
+			for (var i = 0; i < CustomersTargetNumber; i++)
+			{
 				var orders = new List<Order>();
 				var ordersNum = Random.Range(1, 4);
-				for ( var j = 0; j < ordersNum; j++ ) {
+				for (var j = 0; j < ordersNum; j++)
+				{
 					orders.Add(GenerateRandomOrder());
 				}
 				_orderSets.Push(orders);
 				totalOrders += ordersNum;
 			}
-			CustomerPlaces.ForEach(x => x.Free());
+
+			for (int i = 0; i < _customerPlaces.Length; ++i)
+			{
+				_customerPlaces[i].Free();
+			}
+			
 			_timer = 0f;
 
 			TotalCustomersGenerated = 0;
@@ -122,15 +146,18 @@ namespace CookingPrototype.Controllers {
 		/// Отпускаем указанного посетителя
 		/// </summary>
 		/// <param name="customer"></param>
-		public void FreeCustomer(Customer customer) {
-			var place = CustomerPlaces.Find(x => x.CurCustomer == customer);
-			if ( place == null ) {
+		public void FreeCustomer(Customer customer)
+		{
+			var place = GetPlace(customer);
+
+			if (place == null)
+			{
 				return;
 			}
+
 			place.Free();
 			GameplayController.Instance.CheckGameFinish();
 		}
-
 
 		/// <summary>
 		///  Пытаемся обслужить посетителя с заданным заказом и наименьшим оставшимся временем ожидания.
@@ -138,8 +165,66 @@ namespace CookingPrototype.Controllers {
 		/// </summary>
 		/// <param name="order">Заказ, который пытаемся отдать</param>
 		/// <returns>Флаг - результат, удалось ли успешно отдать заказ</returns>
-		public bool ServeOrder(Order order) {
-			throw  new NotImplementedException("ServeOrder: this feature is not implemented.");
+		public bool ServeOrder(Order order)
+		{
+			var customerPlace = GetCustomerPlaceForServe(order);
+
+			if (customerPlace == null)
+			{
+				return false;
+			}
+
+			bool result = customerPlace.CurCustomer.ServeOrder(order);
+
+			if (!customerPlace.CurCustomer.HasAnyOrder())
+			{
+				FreeCustomer(customerPlace.CurCustomer);
+			}
+
+			return result;
 		}
+		
+		private CustomerPlace GetCustomerPlaceForServe(Order order)
+        {
+			CustomerPlace chosenPlace = null;
+			float shortestWaitingTime = float.MaxValue;
+
+			for (int i = 0; i < _customerPlaces.Length; ++i)
+			{
+				var place = _customerPlaces[i];
+
+				if (place.IsFree || !place.CurCustomer.HasOrder(order))
+				{
+					continue;
+				}
+
+				float waitTime = place.CurCustomer.WaitTime;
+
+				if (waitTime < shortestWaitingTime)
+				{
+					shortestWaitingTime = waitTime;
+					chosenPlace = place;
+				}
+			}
+
+			return chosenPlace;
+        }
+		
+		private CustomerPlace GetPlace(Customer customer)
+        {
+			for (int i = 0; i < _customerPlaces.Length; ++i)
+			{
+				var customerPlace = _customerPlaces[i];
+
+				if (customerPlace.CurCustomer != customer)
+				{
+					continue;
+				}
+
+				return customerPlace;
+			}
+
+			return null;
+        }
 	}
 }
