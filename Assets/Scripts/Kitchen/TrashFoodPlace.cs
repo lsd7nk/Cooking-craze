@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 
 namespace CookingPrototype.Kitchen
@@ -8,6 +9,7 @@ namespace CookingPrototype.Kitchen
         [SerializeField, Range(1f, 3f)] private float _timeForFree;
         [SerializeField] private FoodPresenter[] _presenters;
 
+        private CancellationToken _commonCancellationToken;
         private Food _currentFood;
 
         public override bool IsFree => _currentFood == null;
@@ -67,9 +69,19 @@ namespace CookingPrototype.Kitchen
 
         private async UniTaskVoid FreePlaceAsync()
         {
-            await UniTask.WaitForSeconds(_timeForFree);
-            
+            await UniTask.WaitForSeconds(_timeForFree, cancellationToken: _commonCancellationToken);
+
+            if (_commonCancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
             FreePlace();
+        }
+
+        private void Start()
+        {
+            _commonCancellationToken = this.GetCancellationTokenOnDestroy();
         }
     }
 }
