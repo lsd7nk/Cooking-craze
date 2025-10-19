@@ -53,7 +53,8 @@ namespace CookingPrototype.Utils {
 				FileName = appPath,
 				ArgumentList = { "./" }
 			});
-#elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+#elif OSX_TEST && (UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX)
+// added define "OSX_TEST" because Fork crashes if it was running in full screen mode before this discovery
 			try {
 				string projectPath = Directory.GetParent(Application.dataPath)?.FullName ?? "./";
 				string[] forkCliCandidates = new[] {
