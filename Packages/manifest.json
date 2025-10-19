@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
     "com.ems.main-scene-auto-loading": "https://github.com/shelhelix/unity-main-scene-auto-loading-fork.git?path=/Packages/Ems.MainSceneAutoLoading",
     "com.marijnzwemmer.unity-toolbar-extender": "https://github.com/marijnz/unity-toolbar-extender.git",
     "com.unity.2d.sprite": "1.0.0",
