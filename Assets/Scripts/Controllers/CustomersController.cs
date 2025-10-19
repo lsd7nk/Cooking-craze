@@ -216,7 +216,7 @@ namespace CookingPrototype.Controllers {
 			{
 				var customerPlace = _customerPlaces[i];
 
-				if (customerPlace.CurCustomer != customer)
+				if (customerPlace.IsFree || customerPlace.CurCustomer != customer)
 				{
 					continue;
 				}
