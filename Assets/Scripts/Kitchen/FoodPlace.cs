@@ -15,7 +15,7 @@ namespace CookingPrototype.Kitchen {
 		public Food CurFood   { get; private set; } = null;
 		public bool IsCooking { get; private set; } = false;
 
-		public bool IsFree { get { return CurFood == null; } }
+		public override bool IsFree => CurFood == null;
 
 		public float TimerNormalized {
 			get {

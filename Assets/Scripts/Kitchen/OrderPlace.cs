@@ -16,6 +16,8 @@ namespace CookingPrototype.Kitchen {
 
 		List<Order>  _possibleOrders = new List<Order>();
 
+        public override bool IsFree => CurOrder.Count == 0;
+
 		void Start() {
 			_possibleOrders.AddRange(OrdersController.Instance.Orders);
 		}
