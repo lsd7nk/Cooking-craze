@@ -1,0 +1,25 @@
+<root>
+    <order name="Burger">
+        <food>BurgerBun</food>
+        <food needs="BurgerBun">BurgerCutlet</food>
+	</order>
+    <order name="BurgerCheese">
+        <food>BurgerBun</food>
+        <food needs="BurgerBun">BurgerCutlet</food>
+        <food needs="BurgerCutlet">BurgerCheese</food>
+    </order>
+    <order name="BurgerTomato">
+        <food>BurgerBun</food>
+        <food needs="BurgerBun">BurgerCutlet</food>
+        <food needs="BurgerCutlet">BurgerTomato</food>
+    </order>
+    <order name="BurgerCheeseTomato">
+        <food>BurgerBun</food>
+        <food needs="BurgerBun">BurgerCutlet</food>
+        <food needs="BurgerCutlet">BurgerTomato</food>
+        <food needs="BurgerCutlet">BurgerCheese</food>
+    </order>
+    <order name="Cola">
+        <food>Cola</food>
+    </order>
+</root>
