@@ -45,7 +45,7 @@ namespace CookingPrototype.Utils {
 		static void OpenFork() {
 			
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
-			
+
 			var userFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 			var appPath = Path.Combine(userFolder, @"Fork\current\Fork.exe");
 			Debug.Log($"Opening fork at: {appPath}");
@@ -53,6 +53,50 @@ namespace CookingPrototype.Utils {
 				FileName = appPath,
 				ArgumentList = { "./" }
 			});
+#elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+			try {
+				string projectPath = Directory.GetParent(Application.dataPath)?.FullName ?? "./";
+				string[] forkCliCandidates = new[] {
+					"/Applications/Fork.app/Contents/Resources/fork_cli",
+					"/Applications/Fork.app/Contents/Resources/fork_cli/fork",
+					Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+						"Applications/Fork.app/Contents/Resources/fork_cli"),
+					Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+						"Applications/Fork.app/Contents/Resources/fork_cli/fork")
+				};
+
+				for (int i = 0; i < forkCliCandidates.Length; ++i) {
+					string candidate = forkCliCandidates[i];
+
+					if (!File.Exists(candidate)) {
+						continue;
+					}
+
+					Debug.Log($"Opening Fork via CLI at: {candidate}");
+
+					var startInfo = new ProcessStartInfo
+					{
+						FileName = candidate,
+						UseShellExecute = false,
+						ArgumentList = { "-C", projectPath, "open" }
+					};
+
+					Process.Start(startInfo);
+
+					return;
+				}
+
+				string[] openArgs = new[] { "-a", "Fork", projectPath };
+
+				Debug.Log($"Opening Fork via 'open' with args: {string.Join(" ", openArgs)}");
+				Process.Start(new ProcessStartInfo {
+					FileName = "open",
+					ArgumentList = { openArgs[0], openArgs[1], openArgs[2] },
+					UseShellExecute = false
+				});
+			} catch (Exception ex) {
+				Debug.LogError($"Failed to open Fork on macOS: {ex.Message}");
+			}
 #else 
 			Debug.LogError("Opening Fork was not implemented for this platform");
 #endif
