@@ -7,7 +7,7 @@ namespace CookingPrototype.Kitchen
     public sealed class TrashFoodPlace : AbstractFoodPlace
     {
         [SerializeField, Range(1f, 3f)] private float _timeForFree;
-        [SerializeField] private FoodPresenter[] _presenters;
+        [SerializeField] private FoodPresenter[] _foodPresenters;
 
         private CancellationToken _commonCancellationToken;
         private Food _currentFood;
@@ -38,9 +38,9 @@ namespace CookingPrototype.Kitchen
                 return;
             }
 
-            for (int i = 0; i < _presenters.Length; ++i)
+            for (int i = 0; i < _foodPresenters.Length; ++i)
             {
-                var presenter = _presenters[i];
+                var presenter = _foodPresenters[i];
 
                 if (!_currentFood.Name.Equals(presenter.FoodName))
                 {
@@ -57,9 +57,9 @@ namespace CookingPrototype.Kitchen
         {
             _currentFood = food;
             
-            for (int i = 0; i < _presenters.Length; ++i)
+            for (int i = 0; i < _foodPresenters.Length; ++i)
             {
-                var presenter = _presenters[i];
+                var presenter = _foodPresenters[i];
 
                 if (!_currentFood.Name.Equals(presenter.FoodName))
                 {

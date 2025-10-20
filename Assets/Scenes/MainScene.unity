@@ -6275,7 +6275,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _timeForFree: 1.5
-  _presenters:
+  _foodPresenters:
   - {fileID: 68063040}
   - {fileID: 734724153}
 --- !u!1 &684303194
