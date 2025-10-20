@@ -7,9 +7,10 @@ using System.Linq;
 using Random = UnityEngine.Random;
 
 using CookingPrototype.Kitchen;
+using CookingPrototype.PauseHandler;
 
 namespace CookingPrototype.Controllers {
-	public class CustomersController : MonoBehaviour {
+	public class CustomersController : MonoBehaviourPauseHandler {
 
 		public static CustomersController Instance { get; private set; }
 
@@ -43,6 +44,8 @@ namespace CookingPrototype.Controllers {
 				Debug.LogError("Another instance of CustomersController already exists!");
 			}
 			Instance = this;
+
+			Init();
 		}
 
 		void OnDestroy() {
@@ -51,11 +54,12 @@ namespace CookingPrototype.Controllers {
 			}
 		}
 
-		void Start() {
-			Init();
-		}
-
 		void Update() {
+			if (IsOnPause)
+            {
+				return;
+            }
+
 			if ( !HasFreePlaces ) {
 				return;
 			}

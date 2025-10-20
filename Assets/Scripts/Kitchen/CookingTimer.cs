@@ -2,9 +2,10 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using System;
+using CookingPrototype.PauseHandler;
 
 namespace CookingPrototype.Kitchen {
-	public sealed class CookingTimer : MonoBehaviour {
+	public sealed class CookingTimer : MonoBehaviourPauseHandler {
 		[Serializable]
 		public class TimerSpriteSet {
 			public Sprite Background = null;
@@ -52,6 +53,11 @@ namespace CookingPrototype.Kitchen {
 		}
 
 		void Update() {
+			if (IsOnPause)
+			{
+				return;
+			}
+			
 			if ( Place == null ) {
 				return;
 			}
