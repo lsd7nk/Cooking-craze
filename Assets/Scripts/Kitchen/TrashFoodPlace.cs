@@ -33,6 +33,11 @@ namespace CookingPrototype.Kitchen
 
         public override void FreePlace()
         {
+            if (_currentFood == null)
+            {
+                return;
+            }
+
             for (int i = 0; i < _presenters.Length; ++i)
             {
                 var presenter = _presenters[i];

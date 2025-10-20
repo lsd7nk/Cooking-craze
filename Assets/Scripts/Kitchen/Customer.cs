@@ -6,9 +6,10 @@ using System.Collections.Generic;
 using  CookingPrototype.Controllers;
 
 using JetBrains.Annotations;
+using CookingPrototype.PauseHandler;
 
 namespace CookingPrototype.Kitchen {
-	public sealed class Customer : MonoBehaviour {
+	public sealed class Customer : MonoBehaviourPauseHandler {
 		public Image                    CustomerImage   = null;
 		public List<Sprite>             CustomerSprites = null;
 		public Image                    TimerBar        = null;
@@ -52,6 +53,11 @@ namespace CookingPrototype.Kitchen {
         }
 
 		void Update() {
+			if (IsOnPause)
+			{
+				return;
+			}
+
 			if ( !_isActive ) {
 				return;
 			}

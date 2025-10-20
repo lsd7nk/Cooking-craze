@@ -34,16 +34,14 @@ namespace CookingPrototype.Controllers {
 				Debug.LogError("Another instance of OrdersController already exists!");
 			}
 			Instance = this;
+
+			Init();
 		}
 
 		void OnDestroy() {
 			if ( Instance == this ) {
 				Instance = null;
 			}
-		}
-
-		void Start() {
-			Init();
 		}
 
 		void Init() {

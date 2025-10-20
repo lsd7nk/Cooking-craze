@@ -6,14 +6,16 @@ using CookingPrototype.Kitchen;
 using CookingPrototype.UI;
 
 using JetBrains.Annotations;
+using CookingPrototype.PauseHandler;
 
 namespace CookingPrototype.Controllers {
-	public sealed class GameplayController : MonoBehaviour {
+	public sealed class GameplayController : MonoBehaviourPauseHandler {
 		public static GameplayController Instance { get; private set; }
 
 		public GameObject TapBlock   = null;
 		public WinWindow  WinWindow  = null;
 		public LoseWindow LoseWindow = null;
+		[SerializeField] private StartWindow _startWindow;
 
 
 		int _ordersTarget = 0;
@@ -30,22 +32,52 @@ namespace CookingPrototype.Controllers {
 
 		public event Action TotalOrdersServedChanged;
 
-		void Awake() {
-			if ( Instance != null ) {
+		void Awake()
+		{
+			if (Instance != null)
+			{
 				Debug.LogError("Another instance of GameplayController already exists");
 			}
 			Instance = this;
+
+			_startWindow.OnHideEvent += StartGame;
 		}
 
-		void OnDestroy() {
-			if ( Instance == this ) {
+        private void Start()
+		{
+			StartLevel();
+        }
+
+        void OnDestroy()
+		{
+			if (Instance == this)
+			{
 				Instance = null;
 			}
+
+			_startWindow.OnHideEvent -= StartGame;
 		}
 
-		void Init() {
+		private void ShowStartWindow()
+		{
+			_startWindow.SetTargetOrdersCountText(OrdersTarget.ToString());
+			_startWindow.Show();
+		}
+
+		private void StartLevel()
+        {
+			PauseController.Instance.SetPause(true);
+			ShowStartWindow();
+        }
+		
+		private void StartGame()
+        {
+			PauseController.Instance.SetPause(false);
+        }
+
+		void Init()
+		{
 			TotalOrdersServed = 0;
-			Time.timeScale = 1f;
 			TotalOrdersServedChanged?.Invoke();
 		}
 
@@ -56,7 +88,7 @@ namespace CookingPrototype.Controllers {
 		}
 
 		void EndGame(bool win) {
-			Time.timeScale = 0f;
+			PauseController.Instance.SetPause(true);
 			TapBlock?.SetActive(true);
 			if ( win ) {
 				WinWindow.Show();
@@ -88,9 +120,12 @@ namespace CookingPrototype.Controllers {
 			CustomersController.Instance.Init();
 			HideWindows();
 
-			foreach ( var place in FindObjectsByType<AbstractFoodPlace>(FindObjectsSortMode.None) ) {
+			foreach (var place in FindObjectsByType<AbstractFoodPlace>(FindObjectsSortMode.None))
+			{
 				place.FreePlace();
 			}
+
+			StartLevel();
 		}
 
 		public void CloseGame() {

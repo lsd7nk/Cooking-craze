@@ -30,6 +30,11 @@ namespace CookingPrototype.Kitchen {
 		}
 
 		void Update() {
+			if (IsOnPause)
+			{
+				return;
+			}
+			
 			if ( IsFree || !Cook || !IsCooking ) {
 				return;
 			}
