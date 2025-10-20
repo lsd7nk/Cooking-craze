@@ -78,7 +78,6 @@ namespace CookingPrototype.Controllers {
 		void Init()
 		{
 			TotalOrdersServed = 0;
-			Time.timeScale = 1f;
 			TotalOrdersServedChanged?.Invoke();
 		}
 
