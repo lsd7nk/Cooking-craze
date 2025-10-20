@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System.Threading;
+using UnityEngine.UI;
 using UnityEngine;
 
 namespace CookingPrototype.Kitchen
@@ -8,6 +9,11 @@ namespace CookingPrototype.Kitchen
     {
         [SerializeField, Range(1f, 3f)] private float _timeForFree;
         [SerializeField] private FoodPresenter[] _foodPresenters;
+
+        [Header("Sprite swapping")]
+        [SerializeField] private Sprite _openSprite;
+        [SerializeField] private Sprite _closeSprite;
+        [SerializeField] private Image _image;
 
         private CancellationToken _commonCancellationToken;
         private Food _currentFood;
@@ -33,6 +39,8 @@ namespace CookingPrototype.Kitchen
 
         public override void FreePlace()
         {
+            _image.sprite = _closeSprite;
+
             if (_currentFood == null)
             {
                 return;
@@ -55,6 +63,7 @@ namespace CookingPrototype.Kitchen
 
         private void PlaceFood(Food food)
         {
+            _image.sprite = _openSprite;
             _currentFood = food;
             
             for (int i = 0; i < _foodPresenters.Length; ++i)
