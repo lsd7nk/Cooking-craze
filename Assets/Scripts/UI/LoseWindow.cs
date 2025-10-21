@@ -20,7 +20,9 @@ namespace CookingPrototype.UI {
 
 			ReplayButton.onClick.AddListener(gc.Restart);
 			ExitButton  .onClick.AddListener(gc.CloseGame);
-			CloseButton .onClick.AddListener(gc.CloseGame);
+			CloseButton.onClick.AddListener(gc.CloseGame);
+
+			_isInit = true;
 		}
 
 		public void Show() {

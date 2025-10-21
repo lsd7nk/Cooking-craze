@@ -19,6 +19,8 @@ namespace CookingPrototype.UI {
 
 			OkButton   .onClick.AddListener(gc.CloseGame);
 			CloseButton.onClick.AddListener(gc.CloseGame);
+
+			_isInit = true;
 		}
 
 		public void Show () {
